@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAVAL SINGH // DIGITAL ENGINEERING SYSTEM — NOVA OS</title>
+  
+  <!-- SEO & OpenGraph -->
+  <meta name="description" content="Naval Singh — B.Tech First-Year Student at JECRC University, Jaipur. Digital Engineering Command Center & Portfolio.">
+  <meta name="keywords" content="Naval Singh, JECRC University, B.Tech, Engineering, Portfolio, AI, Technology">
+  <meta name="author" content="Naval Singh">
+  
+  <!-- Fonts: Space Grotesk & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/hud-components.css">
+</head>
+<body class="booting">
+
+  <!-- Interactive Custom Cursor (Desktop) -->
+  <div class="custom-cursor-dot" aria-hidden="true"></div>
+  <div class="custom-cursor-ring" aria-hidden="true"></div>
+
+  <!-- Background Cyber Atmosphere Canvas & Scanlines -->
+  <div class="background-canvas-container" aria-hidden="true">
+    <canvas id="neural-grid-canvas"></canvas>
+    <div class="scanline-overlay"></div>
+    <div class="ambient-glow-orbs">
+      <div class="ambient-orb ambient-orb-1"></div>
+      <div class="ambient-orb ambient-orb-2"></div>
+      <div class="ambient-orb ambient-orb-3"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SPEC #4: STARTUP CINEMATIC BOOT SEQUENCE OVERLAY
+       ========================================================================= -->
+  <div id="boot-overlay" class="boot-overlay" role="dialog" aria-modal="true" aria-label="System Startup">
+    <div class="boot-grid-bg"></div>
+    <div class="boot-reticle">
+      <div class="boot-circle-outer"></div>
+      <div class="boot-circle-inner"></div>
+      <div class="boot-core-dot"></div>
+    </div>
+    
+    <div class="boot-terminal-box">
+      <div class="boot-terminal-header">
+        <span>NOVA OS // BIOS v1.0.4</span>
+        <span>INITIALIZING KERNEL</span>
+      </div>
+      
+      <div id="boot-log-stream" class="boot-log-stream">
+        <!-- Lines injected sequentially by boot-sequence.js -->
+      </div>
+      
+      <div class="boot-progress-bar-wrap">
+        <div id="boot-progress-bar" class="boot-progress-bar"></div>
+      </div>
+    </div>
+
+    <button id="boot-skip-btn" class="boot-skip-btn" aria-label="Skip boot sequence">
+      [ SKIP INTRO ESC ]
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       NAVIGATION HUD HEADER
+       ========================================================================= -->
+  <header id="nova-navbar" class="nova-nav">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand" aria-label="Naval Singh Nova OS Home">
+        <div class="brand-emblem">
+          <span>NS</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">NAVAL SINGH</span>
+          <span class="brand-system">NOVA OS // ENG-SYS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#education" class="nav-link">Education</a></li>
+          <li><a href="#core" class="nav-link">Core</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#projects" class="nav-link">Project Lab</a></li>
+          <li><a href="#vision" class="nav-link">Vision</a></li>
+          <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Nav Actions (Sound Toggle & Telemetry) -->
+      <div class="nav-actions">
+        <button id="sound-toggle-btn" class="hud-btn sound-toggle-btn" title="Toggle UI Audio Telemetry" aria-label="Toggle UI Audio">
+          <svg id="sound-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg id="sound-icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <span>AUDIO FX</span>
+        </button>
+
+        <button id="mobile-nav-toggle" class="mobile-nav-toggle" aria-label="Toggle navigation menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Dropdown Navigation Menu -->
+  <div id="mobile-nav-menu" class="mobile-nav-menu" style="display:none;">
+    <ul class="mobile-links">
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#education">EDUCATION</a></li>
+      <li><a href="#core">CORE</a></li>
+      <li><a href="#skills">SKILLS</a></li>
+      <li><a href="#projects">PROJECT LAB</a></li>
+      <li><a href="#vision">VISION</a></li>
+      <li><a href="#roadmap">ROADMAP</a></li>
+      <li><a href="#contact">CONTACT</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <!-- =======================================================================
+         SPEC #5 & #6: HERO SECTION & HOLOGRAPHIC NS CORE
+         ======================================================================= -->
+    <section id="hero" class="hero-section">
+      <div class="container">
+        <div class="hero-layout">
+          
+          <!-- Hero Left Content -->
+          <div class="hero-content">
+            <div class="hero-sys-badge">
+              <span class="live-dot"></span>
+              <span>NOVA OS // COMMAND CENTER LIVE</span>
+            </div>
+
+            <h1 class="hero-title">
+              <span class="title-glitch">NAVAL SINGH</span>
+            </h1>
+
+            <div class="hero-subhead">
+              <span>B.Tech First-Year Student</span>
+              <span class="separator">|</span>
+              <span>Future Engineer</span>
+              <span class="separator">|</span>
+              <span>Technology Enthusiast</span>
+            </div>
+
+            <p class="hero-statement">
+              Building my foundation today. Engineering the future tomorrow.
+            </p>
+
+            <div class="hero-cta-group">
+              <a href="#about" class="btn-primary-ghost">
+                <span>EXPLORE MY SYSTEM</span>
+                <span style="font-size: 1.1rem;">↓</span>
+              </a>
+
+              <!-- SPEC #2: Prominent Hero LinkedIn Button -->
+              <a href="https://www.linkedin.com/in/naval-singh-210808430/" target="_blank" rel="noopener noreferrer" class="btn-linkedin" data-tooltip="View professional profile" aria-label="Connect with Naval Singh on LinkedIn">
+                <!-- Official LinkedIn SVG Icon -->
+                <svg class="linkedin-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27m1.4 9.74V10.13H5.06v8.37h2.8z"/>
+                </svg>
+                <span>CONNECT ON LINKEDIN</span>
+                <span class="arrow-icon">↗</span>
+                <span class="btn-tooltip">View professional profile</span>
+              </a>
+            </div>
+
+            <!-- Real-time HUD Telemetry Coordinate Bar -->
+            <div class="hero-telemetry-row">
+              <div class="telemetry-item">
+                <span class="label">LOCATION</span>
+                <span class="val">JAIPUR, RAJASTHAN</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="label">COORDINATES</span>
+                <span class="val">26.9124° N, 75.7873° E</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="label">SYSTEM STATUS</span>
+                <span class="val" style="color: var(--status-online);">OPTIMAL [ONLINE]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Right: Concentric Holographic NS Core (Spec #5) -->
+          <div class="hero-core-wrapper">
+            <div class="holographic-core" id="holographic-core">
+              
+              <!-- Orbital Rings -->
+              <div class="core-ring core-ring-1"></div>
+              <div class="core-ring core-ring-2"></div>
+              <div class="core-ring core-ring-3"></div>
+              <div class="core-ring core-ring-scanning"></div>
+
+              <!-- Central NS Monogram Core -->
+              <div class="core-monogram">
+                <div class="ns-letters">NS</div>
+                <div class="ns-sublabel">FOUNDATION</div>
+              </div>
+
+              <!-- Surrounding Floating Orbital Badges (Spec #5) -->
+              <div class="orbital-tag tag-pos-1">ENGINEERING</div>
+              <div class="orbital-tag tag-pos-2">TECHNOLOGY</div>
+              <div class="orbital-tag tag-pos-3">LEARNING</div>
+              <div class="orbital-tag tag-pos-4">INNOVATION</div>
+              <div class="orbital-tag tag-pos-5">PROBLEM SOLVING</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #8: ABOUT SECTION
+         ======================================================================= -->
+    <section id="about" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">PROFILE TELEMETRY</div>
+          <h2 class="section-title">ABOUT THE ENGINEER</h2>
+          <p class="section-subtitle">System briefing on current academic trajectory and technological focus.</p>
+        </div>
+
+        <div class="about-grid">
+          <!-- Bio Card -->
+          <div class="glass-panel about-bio-card hud-corner-card reveal-on-scroll">
+            <p class="about-bio-text">
+              I'm Naval Singh, a first-year B.Tech student at JECRC University, Jaipur. I'm currently building my foundation in engineering, programming, technology and problem solving.
+            </p>
+            <p class="about-bio-text">
+              I'm curious about how emerging technologies can solve real-world problems and I'm particularly interested in exploring areas such as artificial intelligence, software development, innovation and entrepreneurship.
+            </p>
+            <p class="about-bio-text">
+              I'm at the beginning of my engineering journey, focused on learning continuously, developing practical skills and turning ideas into meaningful projects.
+            </p>
+
+            <!-- LinkedIn Integration in About -->
+            <div style="margin-top: 32px;">
+              <a href="https://www.linkedin.com/in/naval-singh-210808430/" target="_blank" rel="noopener noreferrer" class="btn-linkedin" data-tooltip="View professional profile" aria-label="Connect on LinkedIn">
+                <svg class="linkedin-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27m1.4 9.74V10.13H5.06v8.37h2.8z"/>
+                </svg>
+                <span>CONNECT ON LINKEDIN</span>
+                <span class="arrow-icon">↗</span>
+                <span class="btn-tooltip">View professional profile</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- 4 HUD Information Modules (Spec #8) -->
+          <div class="about-modules-grid">
+            <div class="hud-module-box hud-corner-card reveal-on-scroll reveal-delay-1">
+              <div class="module-header">
+                <span>01 // STATUS</span>
+                <span style="color: var(--cyan-primary);">MOD-CURRENT</span>
+              </div>
+              <div class="module-value">B.Tech — Year 1</div>
+              <div class="module-sub">First-Year Undergraduate</div>
+            </div>
+
+            <div class="hud-module-box hud-corner-card reveal-on-scroll reveal-delay-2">
+              <div class="module-header">
+                <span>02 // INSTITUTION</span>
+                <span style="color: var(--cyan-primary);">MOD-ACADEMIC</span>
+              </div>
+              <div class="module-value">JECRC University</div>
+              <div class="module-sub">School of Engineering</div>
+            </div>
+
+            <div class="hud-module-box hud-corner-card reveal-on-scroll reveal-delay-3">
+              <div class="module-header">
+                <span>03 // LOCATION</span>
+                <span style="color: var(--cyan-primary);">MOD-BASE</span>
+              </div>
+              <div class="module-value">Jaipur, Rajasthan</div>
+              <div class="module-sub">India [UTC +5:30]</div>
+            </div>
+
+            <div class="hud-module-box hud-corner-card reveal-on-scroll reveal-delay-4">
+              <div class="module-header">
+                <span>04 // DIRECTION</span>
+                <span style="color: var(--cyan-primary);">MOD-FOCUS</span>
+              </div>
+              <div class="module-value">Technology & Innovation</div>
+              <div class="module-sub">AI & Problem Solving</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #9: EDUCATION (FUTURISTIC VERTICAL TIMELINE)
+         ======================================================================= -->
+    <section id="education" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">ACADEMIC TIMELINE</div>
+          <h2 class="section-title">EDUCATION</h2>
+          <p class="section-subtitle">Chronological progression of academic foundations and engineering pursuit.</p>
+        </div>
+
+        <div class="timeline-track-wrap">
+          <div class="timeline-vertical-line">
+            <div class="timeline-pulse-beam"></div>
+          </div>
+
+          <!-- 01 - CLASS X -->
+          <div class="timeline-item reveal-on-scroll reveal-delay-1">
+            <div class="timeline-node">
+              <div class="timeline-node-inner"></div>
+            </div>
+            <div class="glass-panel timeline-card hud-corner-card">
+              <div class="timeline-top">
+                <span class="timeline-tag">01 — CLASS X</span>
+                <span class="timeline-status" style="background: rgba(0, 240, 255, 0.1); color: var(--cyan-primary); border-color: rgba(0,240,255,0.3);">COMPLETED</span>
+              </div>
+              <h3 class="timeline-school">Rao International School, Jaipur</h3>
+              <div class="timeline-meta-row">
+                <div class="timeline-meta-item">BOARD: <strong>RBSE</strong></div>
+                <div class="timeline-meta-item">SCORE: <strong>75%</strong></div>
+                <div class="timeline-meta-item">LOCATION: <strong>Jaipur, Rajasthan</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 - CLASS XII -->
+          <div class="timeline-item reveal-on-scroll reveal-delay-2">
+            <div class="timeline-node">
+              <div class="timeline-node-inner"></div>
+            </div>
+            <div class="glass-panel timeline-card hud-corner-card">
+              <div class="timeline-top">
+                <span class="timeline-tag">02 — CLASS XII</span>
+                <span class="timeline-status" style="background: rgba(0, 240, 255, 0.1); color: var(--cyan-primary); border-color: rgba(0,240,255,0.3);">COMPLETED</span>
+              </div>
+              <h3 class="timeline-school">Rao International School, Jaipur</h3>
+              <div class="timeline-meta-row">
+                <div class="timeline-meta-item">BOARD: <strong>RBSE</strong></div>
+                <div class="timeline-meta-item">STREAM: <strong>Physics, Chemistry, Math (PCM)</strong></div>
+                <div class="timeline-meta-item">SCORE: <strong>74%</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 - PRESENT -->
+          <div class="timeline-item reveal-on-scroll reveal-delay-3">
+            <div class="timeline-node">
+              <div class="timeline-node-inner" style="background: var(--status-online); box-shadow: 0 0 10px var(--status-online);"></div>
+            </div>
+            <div class="glass-panel timeline-card hud-corner-card" style="border-color: rgba(0, 255, 170, 0.35);">
+              <div class="timeline-top">
+                <span class="timeline-tag" style="color: var(--status-online);">03 — PRESENT</span>
+                <span class="timeline-status">CURRENTLY PURSUING</span>
+              </div>
+              <h3 class="timeline-school">JECRC University</h3>
+              <div class="timeline-meta-row">
+                <div class="timeline-meta-item">PROGRAM: <strong>B.Tech — First Year</strong></div>
+                <div class="timeline-meta-item">CAMPUS: <strong>Jaipur, Rajasthan, India</strong></div>
+                <div class="timeline-meta-item">FOCUS: <strong>Engineering & Emerging Tech</strong></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #10: ACADEMIC CORE (ENGINEERING CORE DASHBOARD)
+         ======================================================================= -->
+    <section id="core" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">FOUNDATIONAL MODULES</div>
+          <h2 class="section-title">ENGINEERING CORE</h2>
+          <p class="section-subtitle">First-principles academic competencies and structured technical exploration.</p>
+        </div>
+
+        <div class="core-grid">
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div class="core-card-title">PCM FOUNDATION</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Solid analytical grasp of physics, calculus, and mechanics.</p>
+            <span class="status-badge badge-foundation">FOUNDATION</span>
+          </div>
+
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div class="core-card-title">MATHEMATICAL THINKING</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Rigorous logical derivation and systematic proofs.</p>
+            <span class="status-badge badge-foundation">FOUNDATION</span>
+          </div>
+
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div class="core-card-title">PROBLEM SOLVING</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Deconstructing complex challenges into actionable components.</p>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div class="core-card-title">TECHNOLOGY EXPLORATION</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Tracking breakthrough developments in artificial intelligence.</p>
+            <span class="status-badge badge-exploring">EXPLORING</span>
+          </div>
+
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div class="core-card-title">COMPUTER FUNDAMENTALS</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Architecture, memory hierarchy, operating system basics.</p>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel core-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div class="core-card-title">ENGINEERING LEARNING</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">Hands-on experimentation with code, logic, and tools.</p>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             SPEC #11: PERSONAL STRENGTHS (SYSTEM CHARACTERISTICS)
+             =================================================================== -->
+        <div class="section-header reveal-on-scroll" style="margin-top: 80px;">
+          <div class="section-tag">TRAIT TELEMETRY</div>
+          <h2 class="section-title">SYSTEM CHARACTERISTICS</h2>
+          <p class="section-subtitle">Core personal strengths driving everyday learning, collaboration, and engineering discipline.</p>
+        </div>
+
+        <div class="strengths-grid">
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div class="strength-code">TRAIT // 01</div>
+            <h3 class="strength-title">HARDWORKING</h3>
+            <p class="strength-desc">Consistent effort toward learning and personal growth.</p>
+          </div>
+
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div class="strength-code">TRAIT // 02</div>
+            <h3 class="strength-title">CURIOUS</h3>
+            <p class="strength-desc">Interested in understanding how technology works.</p>
+          </div>
+
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div class="strength-code">TRAIT // 03</div>
+            <h3 class="strength-title">ADAPTIVE</h3>
+            <p class="strength-desc">Willing to learn new tools and concepts.</p>
+          </div>
+
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div class="strength-code">TRAIT // 04</div>
+            <h3 class="strength-title">PROBLEM SOLVER</h3>
+            <p class="strength-desc">Enjoys breaking problems into smaller challenges.</p>
+          </div>
+
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div class="strength-code">TRAIT // 05</div>
+            <h3 class="strength-title">TEAM PLAYER</h3>
+            <p class="strength-desc">Open to collaboration and learning from others.</p>
+          </div>
+
+          <div class="glass-panel strength-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div class="strength-code">TRAIT // 06</div>
+            <h3 class="strength-title">GROWTH MINDSET</h3>
+            <p class="strength-desc">Focused on improving through practice and experience.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #12: SKILLS MATRIX (CURRENTLY DEVELOPING)
+         ======================================================================= -->
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">CAPABILITY MATRIX</div>
+          <h2 class="section-title">CURRENTLY DEVELOPING</h2>
+          <p class="section-subtitle">Real-time skills acquisition in computer science, software logic, and professional craftsmanship.</p>
+        </div>
+
+        <div class="skills-matrix-grid">
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <span class="skill-name">Programming Fundamentals</span>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <span class="skill-name">Computer Science Fundamentals</span>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <span class="skill-name">AI Awareness</span>
+            <span class="status-badge badge-exploring">EXPLORING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <span class="skill-name">Problem Solving</span>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <span class="skill-name">Engineering Concepts</span>
+            <span class="status-badge badge-learning">LEARNING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <span class="skill-name">Digital Tools</span>
+            <span class="status-badge badge-foundation">DEVELOPING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <span class="skill-name">Project Development</span>
+            <span class="status-badge badge-exploring">EXPLORING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <span class="skill-name">Communication</span>
+            <span class="status-badge badge-foundation">DEVELOPING</span>
+          </div>
+
+          <div class="glass-panel skill-matrix-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <span class="skill-name">Entrepreneurship</span>
+            <span class="status-badge badge-exploring">EXPLORING</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #13: PROJECT LAB
+         ======================================================================= -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">R&D WORKSPACE</div>
+          <h2 class="section-title">PROJECT LAB</h2>
+          <p class="section-subtitle">Ideas today. Projects tomorrow.</p>
+        </div>
+
+        <div class="projects-grid">
+          <!-- PROJECT 01 -->
+          <div class="glass-panel project-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div>
+              <div class="project-card-header">
+                <span class="project-number">PROJECT 01</span>
+                <span class="status-badge badge-exploring">EXPLORING</span>
+              </div>
+              <h3 class="project-title">AI EXPLORATION</h3>
+              <p class="project-desc">
+                Exploring how artificial intelligence can be applied to practical student and real-world problems.
+              </p>
+            </div>
+            <button class="project-action-btn" data-concept="ai-exploration">
+              <span>VIEW CONCEPT</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <!-- PROJECT 02 -->
+          <div class="glass-panel project-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div>
+              <div class="project-card-header">
+                <span class="project-number">PROJECT 02</span>
+                <span class="status-badge badge-idea">IDEA STAGE</span>
+              </div>
+              <h3 class="project-title">ENGINEERING PROBLEM SOLVER</h3>
+              <p class="project-desc">
+                Exploring technology-driven solutions for everyday problems.
+              </p>
+            </div>
+            <button class="project-action-btn" data-concept="problem-solver">
+              <span>VIEW CONCEPT</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <!-- PROJECT 03 -->
+          <div class="glass-panel project-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div>
+              <div class="project-card-header">
+                <span class="project-number">PROJECT 03</span>
+                <span class="status-badge badge-live">LIVE</span>
+              </div>
+              <h3 class="project-title">NOVA PORTFOLIO SYSTEM</h3>
+              <p class="project-desc">
+                An interactive futuristic portfolio representing Naval's engineering journey.
+              </p>
+            </div>
+            <button class="project-action-btn" data-concept="nova-os">
+              <span>VIEW CONCEPT</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #14: MILESTONES
+         ======================================================================= -->
+    <section id="milestones" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">CHRONOLOGY</div>
+          <h2 class="section-title">MILESTONES</h2>
+          <p class="section-subtitle">Real markers of progress across Naval's foundational journey.</p>
+        </div>
+
+        <div class="milestones-grid">
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <span class="milestone-seq">01</span>
+            <p class="milestone-desc">Completed Class X with 75%.</p>
+          </div>
+
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <span class="milestone-seq">02</span>
+            <p class="milestone-desc">Completed Class XII with PCM and 74%.</p>
+          </div>
+
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <span class="milestone-seq">03</span>
+            <p class="milestone-desc">Started B.Tech at JECRC University.</p>
+          </div>
+
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-1">
+            <span class="milestone-seq">04</span>
+            <p class="milestone-desc">Beginning structured technical learning.</p>
+          </div>
+
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-2">
+            <span class="milestone-seq">05</span>
+            <p class="milestone-desc">Exploring programming, AI and emerging technologies.</p>
+          </div>
+
+          <div class="glass-panel milestone-card hud-corner-card reveal-on-scroll reveal-delay-3">
+            <span class="milestone-seq">06</span>
+            <p class="milestone-desc">Building a personal digital engineering portfolio.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #15: FUTURE VISION
+         ======================================================================= -->
+    <section id="vision" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">LONG-TERM HORIZON</div>
+          <h2 class="section-title">MISSION // FUTURE</h2>
+        </div>
+
+        <div class="glass-panel vision-quote-card hud-corner-card reveal-on-scroll">
+          <p class="vision-quote">
+            “I don't want to simply use technology. I want to understand it, build with it, and eventually create something that matters.”
+          </p>
+        </div>
+
+        <div class="vision-panels-grid">
+          <!-- LEARN -->
+          <div class="glass-panel vision-panel hud-corner-card reveal-on-scroll reveal-delay-1">
+            <div class="vision-panel-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h3 class="vision-panel-title">LEARN</h3>
+            <p class="vision-panel-desc">
+              Build strong foundations in engineering, programming, AI and technology.
+            </p>
+          </div>
+
+          <!-- BUILD -->
+          <div class="glass-panel vision-panel hud-corner-card reveal-on-scroll reveal-delay-2">
+            <div class="vision-panel-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="vision-panel-title">BUILD</h3>
+            <p class="vision-panel-desc">
+              Create practical projects and experiment with ideas.
+            </p>
+          </div>
+
+          <!-- IMPACT -->
+          <div class="glass-panel vision-panel hud-corner-card reveal-on-scroll reveal-delay-3">
+            <div class="vision-panel-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <h3 class="vision-panel-title">IMPACT</h3>
+            <p class="vision-panel-desc">
+              Use technology and innovation to solve meaningful problems.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #16: FUTURE ROADMAP (2026 - 2030)
+         ======================================================================= -->
+    <section id="roadmap" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <div class="section-tag">STRATEGIC TRAJECTORY</div>
+          <h2 class="section-title">FUTURE ROADMAP</h2>
+          <p class="section-subtitle">Multi-year roadmap outlining targets and engineering milestones.</p>
+        </div>
+
+        <div class="roadmap-conduit reveal-on-scroll">
+          <!-- 2026 -->
+          <div class="roadmap-step current">
+            <div class="roadmap-year">2026</div>
+            <div class="roadmap-node"></div>
+            <div class="roadmap-title">B.Tech Foundation</div>
+            <span class="roadmap-badge" style="background: rgba(0, 255, 170, 0.15); color: var(--status-online); border: 1px solid var(--status-online);">CURRENT</span>
+          </div>
+
+          <!-- 2027 -->
+          <div class="roadmap-step">
+            <div class="roadmap-year">2027</div>
+            <div class="roadmap-node"></div>
+            <div class="roadmap-title">Technical Skill Development</div>
+            <span class="roadmap-badge" style="background: rgba(0, 240, 255, 0.1); color: var(--cyan-primary); border: 1px solid rgba(0,240,255,0.3);">TARGET</span>
+          </div>
+
+          <!-- 2028 -->
+          <div class="roadmap-step">
+            <div class="roadmap-year">2028</div>
+            <div class="roadmap-node"></div>
+            <div class="roadmap-title">Advanced Projects</div>
+            <span class="roadmap-badge" style="background: rgba(0, 240, 255, 0.1); color: var(--cyan-primary); border: 1px solid rgba(0,240,255,0.3);">TARGET</span>
+          </div>
+
+          <!-- 2029 -->
+          <div class="roadmap-step">
+            <div class="roadmap-year">2029</div>
+            <div class="roadmap-node"></div>
+            <div class="roadmap-title">Industry Exposure</div>
+            <span class="roadmap-badge" style="background: rgba(0, 240, 255, 0.1); color: var(--cyan-primary); border: 1px solid rgba(0,240,255,0.3);">TARGET</span>
+          </div>
+
+          <!-- 2030 -->
+          <div class="roadmap-step">
+            <div class="roadmap-year">2030</div>
+            <div class="roadmap-node"></div>
+            <div class="roadmap-title">Engineer / Builder / Innovator</div>
+            <span class="roadmap-badge" style="background: rgba(192, 132, 252, 0.1); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3);">TARGET</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #17: LINKEDIN CONNECTION TERMINAL
+         ======================================================================= -->
+    <section id="network" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll" style="text-align: center;">
+          <div class="section-tag" style="margin: 0 auto 14px;">EXTERNAL PROTOCOL</div>
+          <h2 class="section-title">PROFESSIONAL NETWORK</h2>
+          <p class="section-subtitle" style="margin: 0 auto;">Want to follow Naval's engineering journey?</p>
+        </div>
+
+        <div class="glass-panel linkedin-terminal-card hud-corner-card reveal-on-scroll">
+          <div class="terminal-avatar-reticle">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27m1.4 9.74V10.13H5.06v8.37h2.8z"/>
+            </svg>
+          </div>
+
+          <h3 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 6px;">NAVAL SINGH</h3>
+          <p style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--cyan-primary); margin-bottom: 28px;">
+            B.Tech Student | JECRC University
+          </p>
+
+          <a href="https://www.linkedin.com/in/naval-singh-210808430/" target="_blank" rel="noopener noreferrer" class="btn-linkedin" data-tooltip="View professional profile" aria-label="Connect with Naval Singh on LinkedIn">
+            <svg class="linkedin-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27m1.4 9.74V10.13H5.06v8.37h2.8z"/>
+            </svg>
+            <span>CONNECT ON LINKEDIN</span>
+            <span class="arrow-icon">↗</span>
+            <span class="btn-tooltip">View professional profile</span>
+          </a>
+        </div>
+
+        <!-- Connection Conduit Beam Flowing Down to Contact (Spec #17) -->
+        <div class="connection-beam-guide"></div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SPEC #18: CONTACT TERMINAL
+         ======================================================================= -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="section-header reveal-on-scroll" style="text-align: center;">
+          <div class="section-tag" style="margin: 0 auto 14px;">DIRECT DISPATCH</div>
+          <h2 class="section-title">ESTABLISH CONNECTION</h2>
+          <p class="section-subtitle" style="margin: 0 auto;">Have an idea, project, opportunity, or simply want to connect?</p>
+        </div>
+
+        <div class="glass-panel contact-form-wrap hud-corner-card reveal-on-scroll">
+          <form id="contact-form">
+            <div class="form-group">
+              <label for="contact-name" class="form-label">NAME</label>
+              <input type="text" id="contact-name" class="form-input" placeholder="Your name or affiliation" required>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email" class="form-label">EMAIL</label>
+              <input type="email" id="contact-email" class="form-input" placeholder="your.email@domain.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message" class="form-label">MESSAGE</label>
+              <textarea id="contact-message" class="form-textarea" placeholder="Transmission payload or discussion inquiry..." required></textarea>
+            </div>
+
+            <button type="submit" id="transmit-btn" class="transmit-btn">
+              <span id="transmit-label">TRANSMIT MESSAGE</span>
+            </button>
+          </form>
+
+          <div id="form-response-msg" class="form-response-msg"></div>
+
+          <div style="margin-top: 32px; text-align: center; border-top: 1px dashed rgba(0, 240, 255, 0.18); padding-top: 24px;">
+            <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Direct professional inquiry via LinkedIn:
+            </p>
+            <a href="https://www.linkedin.com/in/naval-singh-210808430/" target="_blank" rel="noopener noreferrer" class="btn-linkedin" data-tooltip="View professional profile" aria-label="View LinkedIn Profile">
+              <svg class="linkedin-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27m1.4 9.74V10.13H5.06v8.37h2.8z"/>
+              </svg>
+              <span>VIEW LINKEDIN PROFILE</span>
+              <span class="arrow-icon">↗</span>
+              <span class="btn-tooltip">View professional profile</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       SPEC #7: AI ASSISTANT — NOVA (FLOATING HUD WIDGET)
+       ========================================================================= -->
+  <aside class="nova-assistant-widget" aria-label="NOVA Assistant Widget">
+    <div id="nova-chat-bubble" class="nova-chat-bubble">
+      <div class="nova-chat-header">
+        <div class="nova-ai-status">
+          <div class="nova-audio-bars">
+            <div class="nova-audio-bar"></div>
+            <div class="nova-audio-bar"></div>
+            <div class="nova-audio-bar"></div>
+            <div class="nova-audio-bar"></div>
+          </div>
+          <span>NOVA // AI GUIDE</span>
+        </div>
+        <button id="nova-close-btn" class="nova-close-btn" aria-label="Close Assistant Bubble">&times;</button>
+      </div>
+
+      <div class="nova-message-body">
+        <span id="nova-typing-text" class="nova-typing-text"></span>
+        <span class="nova-cursor"></span>
+      </div>
+
+      <div class="nova-options-grid">
+        <button class="nova-option-chip" data-target="about">ABOUT</button>
+        <button class="nova-option-chip" data-target="education">EDUCATION</button>
+        <button class="nova-option-chip" data-target="skills">SKILLS</button>
+        <button class="nova-option-chip" data-target="projects">PROJECTS</button>
+        <button class="nova-option-chip" data-target="vision">VISION</button>
+        <button class="nova-option-chip" data-target="contact">CONTACT</button>
+      </div>
+
+      <div class="nova-disclaimer">
+        NOVA OS interactive portfolio guide // Fictional UI companion
+      </div>
+    </div>
+
+    <!-- Toggle Orb -->
+    <button id="nova-avatar-btn" class="nova-avatar-btn" aria-label="Toggle NOVA Assistant">
+      <div class="nova-ping-ring"></div>
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" y1="19" x2="12" y2="22"></line>
+      </svg>
+    </button>
+  </aside>
+
+  <!-- =========================================================================
+       SPEC #13: PROJECT CONCEPT DOSSIER MODAL
+       ========================================================================= -->
+  <div id="concept-modal-backdrop" class="concept-modal-backdrop" role="dialog" aria-modal="true" aria-label="Project Concept Dossier">
+    <div class="concept-modal-window hud-corner-card">
+      <button id="concept-modal-close" class="modal-close-btn" aria-label="Close concept modal">&times;</button>
+      <div id="concept-modal-body">
+        <!-- Content injected dynamically by concept-modal.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SPEC #19: FOOTER
+       ========================================================================= -->
+  <footer class="nova-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand">NAVAL SINGH</div>
+          <div class="footer-sub">B.Tech First Year | JECRC University | Jaipur</div>
+        </div>
+
+        <div class="footer-motto">
+          LEARNING • BUILDING • EVOLVING
+        </div>
+
+        <div>
+          <a href="https://www.linkedin.com/in/naval-singh-210808430/" target="_blank" rel="noopener noreferrer" class="nav-link" style="color: var(--cyan-primary);">
+            LinkedIn ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <span>NOVA OS // SYSTEM ONLINE</span>
+        </div>
+        <div>
+          <span>LOCATION: JAIPUR [26.9124° N, 75.7873° E]</span>
+        </div>
+        <div>
+          <span id="telemetry-date"></span> &bull; <span id="telemetry-clock"></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/sound-effects.js"></script>
+  <script src="js/boot-sequence.js"></script>
+  <script src="js/holographic-core.js"></script>
+  <script src="js/nova-assistant.js"></script>
+  <script src="js/concept-modal.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
